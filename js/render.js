@@ -140,10 +140,10 @@ var Render = (function () {
       '<h4 style="margin:24px 0 12px">【解答欄】各金額を計算して入力してください。</h4>';
 
     kd.questions.forEach(function (q) {
-      html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:var(--gray-50);border-radius:var(--radius)" id="' + q.id + '_wrap">' +
-        '<label style="flex:1;font-weight:600;font-size:0.95rem">' + q.label + '</label>' +
+      html += '<div class="q3-answer-row" style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:12px;background:var(--gray-50);border-radius:var(--radius);flex-wrap:wrap" id="' + q.id + '_wrap">' +
+        '<label style="flex:1;min-width:120px;font-weight:600;font-size:0.95rem">' + q.label + '</label>' +
         '<div style="display:flex;align-items:center;gap:4px"><span>¥</span>' +
-        '<input type="number" id="' + q.id + '" style="width:150px;padding:8px;border:1px solid var(--gray-300);border-radius:4px;text-align:right;font-size:0.95rem" placeholder="金額を入力">' +
+        '<input type="number" id="' + q.id + '" style="width:150px;padding:10px 8px;border:1px solid var(--gray-300);border-radius:4px;text-align:right;font-size:1rem" placeholder="金額を入力">' +
         '</div>' +
         '<span style="font-size:0.8rem;color:var(--gray-500)">' + q.points + '点</span>' +
         '</div>';

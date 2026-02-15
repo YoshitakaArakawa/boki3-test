@@ -522,11 +522,77 @@ body {
 
 /* レスポンシブ */
 @media (max-width: 600px) {
-  .journal-entry { grid-template-columns: 1fr; }
-  .result-detail { grid-template-columns: 1fr; }
-  .container { padding: 12px; }
-  .header h1 { font-size: 1.4rem; }
+  .container { padding: 10px; }
+
+  /* ヘッダー */
+  .header { padding: 20px 16px; margin-bottom: 16px; }
+  .header h1 { font-size: 1.3rem; }
+  .header p { font-size: 0.85rem; }
+
+  /* カード */
+  .card { padding: 16px; margin-bottom: 12px; }
+  .start-screen { padding: 24px 12px; }
+  .start-screen h2 { font-size: 1.3rem; }
+
+  /* モード選択カード */
+  .mode-select { gap: 10px; margin: 20px 0; }
+  .mode-card { width: 100%; padding: 16px; }
+  .mode-card h3 { font-size: 1rem; }
+
+  /* セクションタブ */
+  .section-tabs { gap: 4px; }
+  .section-tab {
+    flex: 1;
+    padding: 8px 6px;
+    font-size: 0.8rem;
+    text-align: center;
+    min-width: 0;
+  }
+  .section-tab .tab-score { font-size: 0.7rem; }
+
+  /* ステータスバー */
+  .status-bar { padding: 12px 16px; top: 0; border-radius: 0; }
   .timer { font-size: 1.2rem; }
-  .history-table { font-size: 0.8rem; }
-  .history-table th, .history-table td { padding: 8px 6px; }
+  .progress-info { font-size: 0.8rem; }
+
+  /* 仕訳入力 */
+  .journal-entry { grid-template-columns: 1fr; gap: 12px; }
+  .journal-side { padding: 12px; }
+  .journal-row select, .journal-row input[type="number"] {
+    padding: 10px 8px;
+    font-size: 1rem;
+  }
+
+  /* テーブル横スクロール */
+  .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .data-table th, .data-table td { padding: 8px; white-space: nowrap; font-size: 0.85rem; }
+
+  /* ボタン */
+  .btn-lg { padding: 14px 24px; font-size: 1rem; width: 100%; }
+  .btn-group { flex-direction: column; gap: 10px; }
+
+  /* 結果画面 */
+  .result-card { padding: 24px 16px; }
+  .result-score { font-size: 3rem; }
+  .result-detail { grid-template-columns: 1fr; gap: 10px; }
+  .result-item { padding: 14px; }
+
+  /* 履歴画面 */
+  .history-stats { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .history-stat { padding: 12px; }
+  .history-stat .stat-value { font-size: 1.3rem; }
+
+  /* 履歴テーブル横スクロール */
+  .history-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .history-table th, .history-table td { padding: 8px 6px; font-size: 0.8rem; white-space: nowrap; }
+
+  /* 選択肢テキスト */
+  .checkbox-group { gap: 8px; }
+  .checkbox-label { padding: 10px 12px; font-size: 0.85rem; }
+
+  /* 問題文 */
+  .question-text { padding: 12px; font-size: 0.95rem; }
+
+  /* 第3問解答欄 */
+  .q3-answer-row { flex-direction: column; gap: 8px; }
 }
