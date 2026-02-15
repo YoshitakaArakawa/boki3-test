@@ -168,7 +168,7 @@ var Render = (function () {
       html += '<div class="card"><h3 style="margin-bottom:16px">次の文章の（　　）にあてはまる語句を選びなさい。</h3>';
 
       App.rironQuestions.forEach(function (q, i) {
-        html += '<div style="margin-bottom:20px;padding:14px;background:var(--gray-50);border-radius:var(--radius)" id="q2p2_' + i + '">' +
+        html += '<div style="margin-bottom:20px;padding:14px;background:var(--gray-50);border-radius:var(--radius)" id="q2p2_wrap_' + i + '">' +
           '<p style="margin-bottom:12px"><span class="q-number">' + (i + 1) + '</span>' + q.q + '</p>' +
           '<div>' +
           '<select id="q2p2_' + i + '" class="riron-select">' +

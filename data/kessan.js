@@ -16,12 +16,12 @@ var KESSAN_POOL = [
       { account: '建物減価償却累計額', debit: 0, credit: 200000 },
       { account: '備品減価償却累計額', debit: 0, credit: 120000 },
       { account: '資本金', debit: 0, credit: 600000 },
-      { account: '繰越利益剰余金', debit: 0, credit: 80000 },
+      { account: '繰越利益剰余金', debit: 0, credit: 91000 },
       { account: '売上', debit: 0, credit: 900000 },
       { account: '仕入', debit: 550000, credit: 0 },
       { account: '給料', debit: 100000, credit: 0 },
       { account: '支払家賃', debit: 24000, credit: 0 },
-      { account: '保険料', debit: 1000, credit: 0 }
+      { account: '保険料', debit: 12000, credit: 0 }
     ],
     adjustments: [
       '① 期末商品棚卸高は ¥70,000 である。売上原価は仕入の行で計算する。',
@@ -41,8 +41,8 @@ var KESSAN_POOL = [
         explanation: '400,000 ÷ 5年 = 80,000' },
       { id: 'q3_5', label: '前払家賃の金額', answer: 6000, points: 5,
         explanation: '翌期分の支払家賃 6,000 を前払家賃に振り替えます。' },
-      { id: 'q3_6', label: '当期純利益', answer: 120000, points: 5,
-        explanation: '収益 900,000 − 費用合計（530,000+100,000+18,000+1,000+1,000+50,000+80,000 = 780,000）= 120,000' },
+      { id: 'q3_6', label: '当期純利益', answer: 109000, points: 5,
+        explanation: '収益 900,000 − 費用合計（530,000+100,000+18,000+12,000+1,000+50,000+80,000 = 791,000）= 109,000' },
       { id: 'q3_7', label: '決算整理後の貸倒引当金残高', answer: 6000, points: 5,
         explanation: '既存 5,000 + 繰入 1,000 = 6,000' }
     ]
@@ -228,7 +228,7 @@ var KESSAN_POOL = [
       { id: 'q3_4', label: '備品の減価償却費', answer: 40000, points: 5,
         explanation: '240,000 ÷ 6年 = 40,000' },
       { id: 'q3_5', label: '未払利息の金額', answer: 4000, points: 5,
-        explanation: '借入金の利息 4,000 が未払いのため、支払利息と未払費用を計上します。' },
+        explanation: '借入金の利息 4,000 が未払いのため、支払利息と未払利息を計上します。' },
       { id: 'q3_6', label: '当期純利益', answer: 229000, points: 5,
         explanation: '収益 1,500,000 − 費用合計（935,000+200,000+36,000+14,000+2,000+40,000+40,000+4,000 = 1,271,000）= 229,000' },
       { id: 'q3_7', label: '決算整理後の貸倒引当金残高', answer: 6000, points: 5,
