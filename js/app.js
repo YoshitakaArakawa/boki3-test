@@ -120,6 +120,12 @@ var App = {
   },
 
   // --- 画面遷移 ---
+  goHome: function () {
+    if (confirm('ホーム画面に戻りますか？\n解答内容は保存されません。')) {
+      App.resetExam();
+    }
+  },
+
   hideAllScreens: function () {
     ['start-screen', 'exam-screen', 'result-screen', 'history-screen'].forEach(function (id) {
       document.getElementById(id).classList.add('hidden');

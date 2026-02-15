@@ -37,6 +37,7 @@ body {
   max-width: 900px;
   margin: 0 auto;
   padding: 10px;
+  overflow-x: hidden;
 }
 
 /* ===== Header ===== */
@@ -75,6 +76,20 @@ body {
 @keyframes pulse { 50% { opacity: 0.6; } }
 .progress-info { font-size: 0.85rem; color: var(--gray-500); }
 
+/* Home button in status bar */
+.home-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.home-btn:active { background: var(--gray-100); }
+
 /* ===== Section Tabs ===== */
 .section-tabs {
   display: flex;
@@ -111,8 +126,9 @@ body {
   background: white;
   border-radius: var(--radius);
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  padding: 16px;
+  padding: 12px;
   margin-bottom: 12px;
+  overflow: hidden;
 }
 .card-header {
   display: flex;
@@ -161,7 +177,8 @@ body {
 .journal-side {
   border: 2px solid var(--gray-200);
   border-radius: var(--radius);
-  padding: 12px;
+  padding: 10px;
+  min-width: 0;
 }
 .journal-side h4 {
   text-align: center;
@@ -181,7 +198,7 @@ body {
 .account-picker-btn {
   display: block;
   width: 100%;
-  padding: 12px 16px;
+  padding: 10px 12px;
   border: 2px dashed var(--gray-300);
   border-radius: var(--radius);
   font-size: 1rem;
@@ -190,6 +207,9 @@ body {
   cursor: pointer;
   color: var(--gray-500);
   transition: all 0.2s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .account-picker-btn:active { background: var(--gray-50); }
 .account-picker-btn.active {
@@ -209,22 +229,26 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 6px;
-  padding: 10px;
+  padding: 8px;
   background: var(--gray-50);
   border: 1px solid var(--gray-200);
   border-radius: var(--radius);
   margin: 6px 0;
 }
 .picker-option {
-  padding: 12px 8px;
+  padding: 10px 6px;
   border: 1px solid var(--gray-200);
   border-radius: var(--radius);
   background: white;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   text-align: center;
   font-weight: 500;
   transition: all 0.15s;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .picker-option:active {
   background: var(--primary);
@@ -243,13 +267,16 @@ body {
 }
 
 .amount-input {
+  display: block;
   width: 100%;
-  padding: 12px;
+  max-width: 100%;
+  padding: 10px;
   border: 1px solid var(--gray-300);
   border-radius: var(--radius);
   font-size: 1rem;
   text-align: right;
   margin-top: 6px;
+  min-width: 0;
 }
 
 /* ===== Q1 Pagination ===== */
@@ -721,7 +748,7 @@ body {
   }
   .section-tab .tab-score { font-size: 0.8rem; }
 
-  .card { padding: 24px; margin-bottom: 16px; }
+  .card { padding: 24px; margin-bottom: 16px; overflow: visible; }
   .card-header h3 { font-size: 1rem; }
   .q-number { width: 32px; height: 32px; font-size: 0.85rem; margin-right: 8px; }
 
