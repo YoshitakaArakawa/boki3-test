@@ -6,10 +6,22 @@ var Render = (function () {
   // --- 第1問：仕訳問題（ページネーション＋タップピッカー） ---
   function renderSection1() {
     var container = document.getElementById('section1');
-    var isQuick = App.currentMode === 'quick';
-    var label = isQuick ? 'クイック確認（仕訳5問）' : '第1問　仕訳問題';
-    var pts = isQuick ? '15点' : '45点';
     var total = App.shiwakeQuestions.length;
+
+    if (total === 0) {
+      container.innerHTML = '';
+      return;
+    }
+
+    var isQuick = App.currentMode === 'quick';
+    var label, pts;
+    if (isQuick) {
+      label = 'クイック確認　仕訳問題（' + total + '問）';
+      pts = (total * 3) + '点';
+    } else {
+      label = '第1問　仕訳問題';
+      pts = '45点';
+    }
 
     var html = '<div class="card"><h2>' + label +
       ' <span style="font-size:0.85rem;color:var(--gray-500)">' + pts + '</span></h2></div>';
@@ -112,44 +124,65 @@ var Render = (function () {
   // --- 第2問：補助簿・理論 ---
   function renderSection2() {
     var container = document.getElementById('section2');
-    var html = '<div class="card"><h2>第2問　補助簿・理論問題 <span style="font-size:0.85rem;color:var(--gray-500)">20点</span></h2></div>';
+    var isQuick = App.currentMode === 'quick';
+    var hasHojobobo = App.hojoboboQuestions.length > 0;
+    var hasRiron = App.rironQuestions.length > 0;
 
-    // Part 1: 補助簿選択
-    html += '<div class="card"><h3 style="margin-bottom:16px">次の各取引について、記入が必要な補助簿をすべて選びなさい。</h3>';
+    if (!hasHojobobo && !hasRiron) {
+      container.innerHTML = '';
+      return;
+    }
 
-    App.hojoboboQuestions.forEach(function (q, i) {
-      html += '<div style="margin-bottom:20px;padding:14px;background:var(--gray-50);border-radius:var(--radius)" id="q2p1_' + i + '">' +
-        '<p style="font-weight:600;margin-bottom:12px"><span class="q-number">' + (i + 1) + '</span>' + q.q + '</p>' +
-        '<div class="checkbox-group">';
+    var html = '';
 
-      q.allBooks.forEach(function (book) {
-        html += '<label class="checkbox-label" onclick="App.toggleCheckbox(this)">' +
-          '<input type="checkbox" name="q2p1_' + i + '" value="' + book + '"> ' + book +
-          '</label>';
+    // ヘッダー
+    if (isQuick) {
+      var rironCount = App.rironQuestions.length;
+      html += '<div class="card"><h2>クイック確認　理論問題（' + rironCount + '問） <span style="font-size:0.85rem;color:var(--gray-500)">' + (rironCount * 2.5) + '点</span></h2></div>';
+    } else {
+      html += '<div class="card"><h2>第2問　補助簿・理論問題 <span style="font-size:0.85rem;color:var(--gray-500)">20点</span></h2></div>';
+    }
+
+    // Part 1: 補助簿選択（クイックモードでは表示しない）
+    if (hasHojobobo) {
+      html += '<div class="card"><h3 style="margin-bottom:16px">次の各取引について、記入が必要な補助簿をすべて選びなさい。</h3>';
+
+      App.hojoboboQuestions.forEach(function (q, i) {
+        html += '<div style="margin-bottom:20px;padding:14px;background:var(--gray-50);border-radius:var(--radius)" id="q2p1_' + i + '">' +
+          '<p style="font-weight:600;margin-bottom:12px"><span class="q-number">' + (i + 1) + '</span>' + q.q + '</p>' +
+          '<div class="checkbox-group">';
+
+        q.allBooks.forEach(function (book) {
+          html += '<label class="checkbox-label" onclick="App.toggleCheckbox(this)">' +
+            '<input type="checkbox" name="q2p1_' + i + '" value="' + book + '"> ' + book +
+            '</label>';
+        });
+
+        html += '</div></div>';
       });
-
-      html += '</div></div>';
-    });
-    html += '</div>';
+      html += '</div>';
+    }
 
     // Part 2: 理論問題
-    html += '<div class="card"><h3 style="margin-bottom:16px">次の文章の（　　）にあてはまる語句を選びなさい。</h3>';
+    if (hasRiron) {
+      html += '<div class="card"><h3 style="margin-bottom:16px">次の文章の（　　）にあてはまる語句を選びなさい。</h3>';
 
-    App.rironQuestions.forEach(function (q, i) {
-      html += '<div style="margin-bottom:20px;padding:14px;background:var(--gray-50);border-radius:var(--radius)" id="q2p2_' + i + '">' +
-        '<p style="margin-bottom:12px"><span class="q-number">' + (i + 1) + '</span>' + q.q + '</p>' +
-        '<div>' +
-        '<select id="q2p2_' + i + '" class="riron-select">' +
-        '<option value="">-- 選択 --</option>';
+      App.rironQuestions.forEach(function (q, i) {
+        html += '<div style="margin-bottom:20px;padding:14px;background:var(--gray-50);border-radius:var(--radius)" id="q2p2_' + i + '">' +
+          '<p style="margin-bottom:12px"><span class="q-number">' + (i + 1) + '</span>' + q.q + '</p>' +
+          '<div>' +
+          '<select id="q2p2_' + i + '" class="riron-select">' +
+          '<option value="">-- 選択 --</option>';
 
-      q.choices.forEach(function (c, ci) {
-        var label = ['ア', 'イ', 'ウ', 'エ', 'オ'][ci] || '';
-        html += '<option value="' + c + '">' + label + '. ' + c + '</option>';
+        q.choices.forEach(function (c, ci) {
+          var label = ['ア', 'イ', 'ウ', 'エ', 'オ'][ci] || '';
+          html += '<option value="' + c + '">' + label + '. ' + c + '</option>';
+        });
+
+        html += '</select></div></div>';
       });
-
-      html += '</select></div></div>';
-    });
-    html += '</div>';
+      html += '</div>';
+    }
 
     container.innerHTML = html;
   }
@@ -213,6 +246,11 @@ var Render = (function () {
         '<div class="result-item"><h4>第1問 仕訳</h4><div class="score">' + s1 + ' / ' + t1 + '</div></div>' +
         '<div class="result-item"><h4>第2問 補助簿・理論</h4><div class="score">' + s2 + ' / ' + t2 + '</div></div>' +
         '<div class="result-item"><h4>第3問 決算</h4><div class="score">' + s3 + ' / ' + t3 + '</div></div>' +
+        '</div>';
+    } else if (App.currentMode === 'quick' && App.quickType === 'mix') {
+      html += '<div class="result-detail">' +
+        '<div class="result-item"><h4>仕訳</h4><div class="score">' + s1 + ' / ' + t1 + '</div></div>' +
+        '<div class="result-item"><h4>理論</h4><div class="score">' + s2 + ' / ' + t2 + '</div></div>' +
         '</div>';
     }
     html += '</div>';
@@ -402,6 +440,9 @@ var Render = (function () {
         var modeLabel = { full: '本番形式', section: '大問別', quick: 'クイック' }[r.mode] || r.mode;
         if (r.mode === 'section' && r.selectedSection) {
           modeLabel += '（第' + r.selectedSection + '問）';
+        } else if (r.mode === 'quick' && r.quickType) {
+          var qtLabels = { shiwake: '仕訳', riron: '理論', mix: 'ミックス' };
+          modeLabel += '（' + (qtLabels[r.quickType] || '') + '）';
         }
 
         var pct = Math.round((r.scores.total / r.scores.possible) * 100);
@@ -453,6 +494,11 @@ var Render = (function () {
         '<div class="result-item"><h4>第1問 仕訳</h4><div class="score">' + record.scores.section1.score + ' / ' + record.scores.section1.possible + '</div></div>' +
         '<div class="result-item"><h4>第2問 補助簿・理論</h4><div class="score">' + record.scores.section2.score + ' / ' + record.scores.section2.possible + '</div></div>' +
         '<div class="result-item"><h4>第3問 決算</h4><div class="score">' + record.scores.section3.score + ' / ' + record.scores.section3.possible + '</div></div>' +
+        '</div>';
+    } else if (record.mode === 'quick' && record.quickType === 'mix' && record.scores.section1) {
+      html += '<div class="result-detail">' +
+        '<div class="result-item"><h4>仕訳</h4><div class="score">' + record.scores.section1.score + ' / ' + record.scores.section1.possible + '</div></div>' +
+        '<div class="result-item"><h4>理論</h4><div class="score">' + record.scores.section2.score + ' / ' + record.scores.section2.possible + '</div></div>' +
         '</div>';
     }
     html += '</div>';

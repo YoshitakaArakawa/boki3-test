@@ -30,6 +30,7 @@ var Grading = (function () {
     var score1 = 0, score2 = 0, score3 = 0;
     var total1 = 0, total2 = 0, total3 = 0;
     var details = { q1: [], q2p1: [], q2p2: [], q3: [] };
+    var isQuick = App.currentMode === 'quick';
 
     // --- 第1問採点（各3点） ---
     total1 = App.shiwakeQuestions.length * 3;
@@ -55,29 +56,31 @@ var Grading = (function () {
     });
 
     // --- 第2問採点 ---
-    if (App.currentMode !== 'quick') {
-      total2 = 20;
-
-      // Part 1: 補助簿選択（各2.5点 × 4問 = 10点）
+    // 補助簿選択（クイックモードでは出題しない）
+    if (!isQuick && App.hojoboboQuestions.length > 0) {
       App.hojoboboQuestions.forEach(function (q, i) {
         var checked = Array.from(document.querySelectorAll('input[name="q2p1_' + i + '"]:checked'))
           .map(function (cb) { return cb.value; });
         var correct = arraysEqual(checked.sort(), q.books.slice().sort());
         if (correct) score2 += 2.5;
+        total2 += 2.5;
         details.q2p1.push({ question: q, userAnswer: checked, correct: correct });
       });
+    }
 
-      // Part 2: 理論問題（各2.5点 × 4問 = 10点）
+    // 理論問題（クイックの仕訳のみモードでは出題しない）
+    if (App.rironQuestions.length > 0 && (!isQuick || App.quickType !== 'shiwake')) {
       App.rironQuestions.forEach(function (q, i) {
         var userVal = (document.getElementById('q2p2_' + i) || {}).value || '';
         var correct = userVal === q.answer;
         if (correct) score2 += 2.5;
+        total2 += 2.5;
         details.q2p2.push({ question: q, userAnswer: userVal, correct: correct });
       });
     }
 
     // --- 第3問採点（各5点 × 7問 = 35点） ---
-    if (App.currentMode !== 'quick') {
+    if (!isQuick) {
       total3 = 35;
 
       App.kessanData.questions.forEach(function (q) {
@@ -90,9 +93,17 @@ var Grading = (function () {
 
     // スコア算出（モード別）
     var totalPossible, totalScore;
-    if (App.currentMode === 'quick') {
-      totalPossible = total1;
-      totalScore = score1;
+    if (isQuick) {
+      if (App.quickType === 'shiwake') {
+        totalPossible = total1;
+        totalScore = score1;
+      } else if (App.quickType === 'riron') {
+        totalPossible = total2;
+        totalScore = score2;
+      } else {
+        totalPossible = total1 + total2;
+        totalScore = score1 + score2;
+      }
     } else if (App.currentMode === 'section') {
       if (App.selectedSection === 1) { totalPossible = total1; totalScore = score1; }
       else if (App.selectedSection === 2) { totalPossible = total2; totalScore = score2; }
@@ -109,6 +120,7 @@ var Grading = (function () {
     var timeUsed = App.currentMode === 'full' ? (3600 - App.timeLeft) : null;
     History.save({
       mode: App.currentMode,
+      quickType: App.quickType,
       selectedSection: App.selectedSection,
       timeUsed: timeUsed,
       scores: {

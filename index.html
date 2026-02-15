@@ -54,7 +54,25 @@
         </div>
         <div class="mode-card" onclick="App.selectMode('quick')" id="mode-quick">
           <h3>クイック</h3>
-          <p>仕訳5問で<br>サクッと確認</p>
+          <p>8問で<br>サクッと確認</p>
+        </div>
+      </div>
+
+      <div id="quick-type-select" class="hidden" style="margin: 20px 0;">
+        <p style="margin-bottom: 12px; font-weight: 600;">出題タイプを選択：</p>
+        <div class="mode-select">
+          <div class="mode-card selected" onclick="App.selectQuickType('mix')" id="qt-mix">
+            <h3>ミックス</h3>
+            <p>仕訳5問 + 理論3問</p>
+          </div>
+          <div class="mode-card" onclick="App.selectQuickType('shiwake')" id="qt-shiwake">
+            <h3>仕訳のみ</h3>
+            <p>仕訳8問</p>
+          </div>
+          <div class="mode-card" onclick="App.selectQuickType('riron')" id="qt-riron">
+            <h3>理論のみ</h3>
+            <p>理論8問</p>
+          </div>
         </div>
       </div>
 

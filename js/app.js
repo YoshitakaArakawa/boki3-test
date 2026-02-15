@@ -3,6 +3,7 @@
 // ============================
 var App = {
   currentMode: 'full',
+  quickType: 'mix',
   selectedSection: null,
   timerInterval: null,
   timeLeft: 3600,
@@ -23,12 +24,27 @@ var App = {
     if (el) el.classList.add('selected');
 
     var sectionSelect = document.getElementById('section-select');
+    var quickTypeSelect = document.getElementById('quick-type-select');
     if (mode === 'section') {
       sectionSelect.classList.remove('hidden');
+      quickTypeSelect.classList.add('hidden');
+      App.selectedSection = null;
+    } else if (mode === 'quick') {
+      sectionSelect.classList.add('hidden');
+      quickTypeSelect.classList.remove('hidden');
+      App.selectedSection = null;
     } else {
       sectionSelect.classList.add('hidden');
+      quickTypeSelect.classList.add('hidden');
       App.selectedSection = null;
     }
+  },
+
+  selectQuickType: function (type) {
+    App.quickType = type;
+    document.querySelectorAll('#quick-type-select .mode-card').forEach(function (c) { c.classList.remove('selected'); });
+    var el = document.getElementById('qt-' + type);
+    if (el) el.classList.add('selected');
   },
 
   selectSection: function (sec) {
@@ -46,10 +62,26 @@ var App = {
     }
 
     // 問題をランダム選出
-    var shiwakeCount = App.currentMode === 'quick' ? 5 : 15;
-    App.shiwakeQuestions = App.shuffleArray(SHIWAKE_POOL.slice()).slice(0, shiwakeCount);
-    App.hojoboboQuestions = App.shuffleArray(HOJOBOBO_POOL.slice()).slice(0, 4);
-    App.rironQuestions = App.shuffleArray(RIRON_POOL.slice()).slice(0, 4);
+    if (App.currentMode === 'quick') {
+      var qt = App.quickType;
+      if (qt === 'shiwake') {
+        App.shiwakeQuestions = App.shuffleArray(SHIWAKE_POOL.slice()).slice(0, 8);
+        App.hojoboboQuestions = [];
+        App.rironQuestions = [];
+      } else if (qt === 'riron') {
+        App.shiwakeQuestions = [];
+        App.hojoboboQuestions = [];
+        App.rironQuestions = App.shuffleArray(RIRON_POOL.slice()).slice(0, 8);
+      } else {
+        App.shiwakeQuestions = App.shuffleArray(SHIWAKE_POOL.slice()).slice(0, 5);
+        App.hojoboboQuestions = [];
+        App.rironQuestions = App.shuffleArray(RIRON_POOL.slice()).slice(0, 3);
+      }
+    } else {
+      App.shiwakeQuestions = App.shuffleArray(SHIWAKE_POOL.slice()).slice(0, 15);
+      App.hojoboboQuestions = App.shuffleArray(HOJOBOBO_POOL.slice()).slice(0, 4);
+      App.rironQuestions = App.shuffleArray(RIRON_POOL.slice()).slice(0, 4);
+    }
     App.kessanData = KESSAN_POOL[Math.floor(Math.random() * KESSAN_POOL.length)];
     App.examStartTime = Date.now();
 
@@ -57,16 +89,25 @@ var App = {
     document.getElementById('exam-screen').classList.remove('hidden');
 
     // セクション表示制御
+    document.querySelectorAll('.section').forEach(function (s) { s.classList.remove('active'); });
     if (App.currentMode === 'section') {
       document.getElementById('section-tabs').classList.add('hidden');
-      document.querySelectorAll('.section').forEach(function (s) { s.classList.remove('active'); });
       document.getElementById('section' + App.selectedSection).classList.add('active');
       document.getElementById('timer').textContent = '∞';
     } else if (App.currentMode === 'quick') {
       document.getElementById('section-tabs').classList.add('hidden');
-      document.querySelectorAll('.section').forEach(function (s) { s.classList.remove('active'); });
-      document.getElementById('section1').classList.add('active');
+      var qt = App.quickType;
+      if (qt === 'shiwake') {
+        document.getElementById('section1').classList.add('active');
+      } else if (qt === 'riron') {
+        document.getElementById('section2').classList.add('active');
+      } else {
+        document.getElementById('section1').classList.add('active');
+        document.getElementById('section2').classList.add('active');
+      }
       document.getElementById('timer').textContent = '∞';
+      var qtLabels = { shiwake: '仕訳8問', riron: '理論8問', mix: '仕訳5問 + 理論3問' };
+      document.getElementById('progress-info').textContent = 'クイック：' + qtLabels[qt];
     } else {
       document.getElementById('section-tabs').classList.remove('hidden');
       App.timeLeft = 3600;
@@ -77,6 +118,7 @@ var App = {
     Render.renderSection2();
     Render.renderSection3();
     App.updateProgress();
+    window.scrollTo(0, 0);
   },
 
   // --- タイマー ---
@@ -110,6 +152,7 @@ var App = {
     document.querySelectorAll('.section-tab').forEach(function (t) { t.classList.remove('active'); });
     document.getElementById('tab' + num).classList.add('active');
     App.updateProgress();
+    window.scrollTo(0, 0);
   },
 
   updateProgress: function () {
