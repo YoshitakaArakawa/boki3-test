@@ -7,6 +7,7 @@ var App = {
   timerInterval: null,
   timeLeft: 3600,
   examStartTime: null,
+  currentQ1Index: 0,
 
   // 出題される問題（毎回ランダム選出）
   shiwakeQuestions: [],
@@ -185,5 +186,119 @@ var App = {
       arr[j] = tmp;
     }
     return arr;
+  },
+
+  // --- Q1 ページネーション ---
+  showQ1: function (index) {
+    var total = App.shiwakeQuestions.length;
+    if (index < 0 || index >= total) return;
+
+    // ページ切替
+    document.querySelectorAll('.q1-page').forEach(function (p) { p.classList.remove('active'); });
+    var page = document.getElementById('q1-page-' + index);
+    if (page) page.classList.add('active');
+
+    // ドット更新
+    document.querySelectorAll('.q1-dot').forEach(function (d) { d.classList.remove('current'); });
+    var dot = document.getElementById('q1-dot-' + index);
+    if (dot) dot.classList.add('current');
+
+    // カウンター更新
+    var counter = document.getElementById('q1-counter');
+    if (counter) counter.textContent = (index + 1) + ' / ' + total;
+
+    // ボタン状態
+    var prevBtn = document.getElementById('q1-prev');
+    var nextBtn = document.getElementById('q1-next');
+    if (prevBtn) prevBtn.disabled = (index === 0);
+    if (nextBtn) nextBtn.disabled = (index === total - 1);
+
+    App.currentQ1Index = index;
+    App.updateQ1Dots();
+
+    // 開いてるピッカーを閉じる
+    document.querySelectorAll('.account-picker-menu').forEach(function (m) { m.classList.add('hidden'); });
+    document.querySelectorAll('.account-picker-btn').forEach(function (b) { b.classList.remove('active'); });
+
+    // セクション上部にスクロール
+    var section = document.getElementById('section1');
+    if (section) {
+      var offset = section.getBoundingClientRect().top + window.pageYOffset - 60;
+      window.scrollTo(0, Math.max(0, offset));
+    }
+  },
+
+  nextQ1: function () {
+    App.showQ1(App.currentQ1Index + 1);
+  },
+
+  prevQ1: function () {
+    App.showQ1(App.currentQ1Index - 1);
+  },
+
+  updateQ1Dots: function () {
+    App.shiwakeQuestions.forEach(function (q, i) {
+      var dot = document.getElementById('q1-dot-' + i);
+      if (!dot) return;
+      var hasAnswer = false;
+      var maxRows = Math.max(Math.max(q.debit.length, 2), Math.max(q.credit.length, 2));
+      for (var r = 0; r < maxRows; r++) {
+        var dAcc = document.getElementById('q1_' + i + '_d_acc_' + r);
+        if (dAcc && dAcc.value) { hasAnswer = true; break; }
+        var cAcc = document.getElementById('q1_' + i + '_c_acc_' + r);
+        if (cAcc && cAcc.value) { hasAnswer = true; break; }
+        var dAmt = document.getElementById('q1_' + i + '_d_amt_' + r);
+        if (dAmt && dAmt.value) { hasAnswer = true; break; }
+        var cAmt = document.getElementById('q1_' + i + '_c_amt_' + r);
+        if (cAmt && cAmt.value) { hasAnswer = true; break; }
+      }
+      if (hasAnswer) {
+        dot.classList.add('answered');
+      } else {
+        dot.classList.remove('answered');
+      }
+    });
+  },
+
+  // --- 科目ピッカー ---
+  togglePicker: function (id) {
+    var menu = document.getElementById(id + '_menu');
+    if (!menu) return;
+    var wasHidden = menu.classList.contains('hidden');
+
+    // 全メニューを閉じる
+    document.querySelectorAll('.account-picker-menu').forEach(function (m) { m.classList.add('hidden'); });
+    document.querySelectorAll('.account-picker-btn').forEach(function (b) { b.classList.remove('active'); });
+
+    if (wasHidden) {
+      menu.classList.remove('hidden');
+      var btn = document.getElementById(id + '_btn');
+      if (btn) btn.classList.add('active');
+    }
+  },
+
+  pickAccount: function (id, value) {
+    // 隠しinputに値をセット
+    var hidden = document.getElementById(id);
+    if (hidden) hidden.value = value;
+
+    // ボタン表示更新
+    var btn = document.getElementById(id + '_btn');
+    if (btn) {
+      if (value) {
+        btn.textContent = value;
+        btn.classList.add('picked');
+      } else {
+        btn.innerHTML = '科目を選択 &#9660;';
+        btn.classList.remove('picked');
+      }
+      btn.classList.remove('active');
+    }
+
+    // メニューを閉じる
+    var menu = document.getElementById(id + '_menu');
+    if (menu) menu.classList.add('hidden');
+
+    App.updateQ1Dots();
   }
 };
